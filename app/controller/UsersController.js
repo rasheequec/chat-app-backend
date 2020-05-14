@@ -9,7 +9,7 @@ router.post('/register', function(req, res){
     const user = new User(body)
     user.save()
         .then(function(user){
-            res.send(user)
+            res.send({successMessage: "You have successfully registered. Please login to continue"})
         }) 
         .catch(function(err){
             res.send(err)
@@ -23,8 +23,8 @@ router.post('/login', function(req, res){
         .then(function(user){
            return user.generateToken()
         })
-        .then(function(token){
-            res.setHeader('x-auth', token).send({})
+        .then(function(userData){        
+            res.send(userData)
         })
         .catch(function(err){
             res.send(err)
@@ -52,7 +52,7 @@ router.delete('/logout', authenticateUser, function(req, res){
     const { user, token } = req 
     User.findByIdAndUpdate(user._id, { $pull: { tokens: { token: token }}})
         .then(function(){
-            res.send({notice: 'successfully logged out'})
+            res.send({message: 'successfully logged out'})
         })
         .catch(function(err){
             res.send(err)
