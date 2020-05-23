@@ -7,5 +7,9 @@ module.exports = function chatService(server){
             console.log('join')   
             socket.join(data.userid);
           });
+
+          socket.on('disconnect', function(){ 
+            console.log("disconnected")
+          });
     })
 }
