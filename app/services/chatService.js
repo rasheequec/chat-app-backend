@@ -3,5 +3,9 @@ module.exports = function chatService(server){
     console.log("chatservice called");
     io.on("connection", function (socket) {
         console.log("a user connected")
+        socket.on('join', function (data) { 
+            console.log('join')   
+            socket.join(data.userid);
+          });
     })
 }
