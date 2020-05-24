@@ -90,6 +90,7 @@ userSchema.statics.findByToken = function(token){
 
 userSchema.statics.getUserList = async function(){
     let list = await User.find({})
+    
     let userList = []
     list.forEach(function(user){
         userList.push({

@@ -1,3 +1,6 @@
+const { Chat } = require('../model/Chat')
+
+
 module.exports = function chatService(server){
     const io = require('socket.io').listen(server);
     console.log("chatservice called");
@@ -6,6 +9,15 @@ module.exports = function chatService(server){
         socket.on('join', function (data) { 
             console.log('join')   
             socket.join(data.userid);
+          });
+
+        socket.on('MESSAGE_SEND_REQUEST', (body) => {
+            console.log(body);
+            Chat.saveMessage(body).then(messageData => {
+                console.log('success',messageData)
+            }).catch(err => {
+                console.log('err',err)
+            })
           });
 
           socket.on('disconnect', function(){ 

@@ -6,6 +6,10 @@ const messageSchema = new Schema({
         type: String, 
         required: true
     },
+    receiverId: {
+        type: String,
+        required: true
+    },
     message: {
         type: String,
         required: true
@@ -24,5 +28,6 @@ const Message = mongoose.model('Message', messageSchema)
 
 
 module.exports = {
-    Message
+    Message,
+    messageSchema
 }
