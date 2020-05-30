@@ -41,8 +41,11 @@ chatSchema.statics.saveMessage = async function(messageData){
     findChat.messages.push(messages)
     console.log('find chat', findChat)
     return findChat.save().then(user => {
+        let result = {}
+        result.message = messages
+        result.chatId = _id
         console.log('after save', user)
-        return Promise.resolve(messages)
+        return Promise.resolve(result)
     }).catch(err => {
         return Promise.reject(err)
     })
@@ -56,7 +59,7 @@ chatSchema.statics.saveMessage = async function(messageData){
     const result = new Chat(body)
     return result.save()
     .then(function(user){
-        return Promise.resolve(messages)
+        return Promise.resolve(messages, _id)
     })
     .catch(function(err){
         return Promise.reject(err)
@@ -75,7 +78,8 @@ let userList = []
                 username: user.username,
                 email: user.email,
                 id: user._id,
-                messages: []
+                messages: [],
+                chatId: ""
             })
          }
       })
@@ -87,6 +91,7 @@ let userList = []
           chatFilter.forEach(chat => {
               if(chat.users.includes(user.id)){
                 userList[i].messages = chat.messages
+                userList[i].chatId = chat._id
               }
           })
       })

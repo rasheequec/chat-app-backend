@@ -14,6 +14,7 @@ module.exports = function chatService(server){
         socket.on('MESSAGE_SEND_REQUEST', (body) => {
             console.log(body);
             Chat.saveMessage(body).then(messageData => {
+                socket.emit('RECEIVE_MESSAGE',messageData)
                 console.log('success',messageData)
             }).catch(err => {
                 console.log('err',err)
