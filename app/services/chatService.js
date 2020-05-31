@@ -7,15 +7,17 @@ module.exports = function chatService(server){
     io.on("connection", function (socket) {
         console.log("a user connected")
         socket.on('join', function (data) { 
-            console.log('join')   
+            console.log('join',data.userid)   
             socket.join(data.userid);
           });
 
         socket.on('MESSAGE_SEND_REQUEST', (body) => {
             console.log(body);
             Chat.saveMessage(body).then(messageData => {
-                socket.emit('RECEIVE_MESSAGE',messageData)
-                console.log('success',messageData)
+                // socket.emit('RECEIVE_MESSAGE',messageData)
+                socket.to(messageData.senderId).emit('RECEIVE_MESSAGE', 'messageData');
+                console.log('send to ',messageData.senderId)
+
             }).catch(err => {
                 console.log('err',err)
             })

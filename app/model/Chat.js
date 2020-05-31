@@ -33,7 +33,8 @@ const chatSchema = new Schema({
 
 chatSchema.statics.saveMessage = async function(messageData){
     // const Chat = this;
-    const _id = messageData.senderId+messageData.receiverId.split('').sort().join('');
+    const chat_id =  messageData.senderId+messageData.receiverId
+    const _id = chat_id.split('').sort().join('');
     const messages = new Message(messageData)
 
     const findChat = await Chat.findOne({_id})
@@ -54,7 +55,7 @@ chatSchema.statics.saveMessage = async function(messageData){
         console.log('not find')
     const body={}
     body.messages = messages
-    body._id = messageData.senderId+messageData.receiverId.split('').sort().join('')
+    body._id = _id
     body.users = [messageData.senderId, messageData.receiverId]
     const result = new Chat(body)
     return result.save()
@@ -73,7 +74,7 @@ let userList = []
    return Chat.find({}).then(async chatData => {
         let list = await User.find({})        
         list.forEach(function(user){
-         if (user._id !== id){
+         if (user._id != id){
             userList.push({
                 username: user.username,
                 email: user.email,
