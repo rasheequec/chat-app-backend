@@ -29,6 +29,37 @@ module.exports = function chatService(server){
             })
           });
 
+         socket.on('INITIATE_CALL_EVENT', body => {
+           console.log(body)
+          const findSocket = onlineUsers.find(user => {
+            return user.userId == body.receiverId
+          })
+          if(findSocket){
+            io.to(findSocket.socketId).emit('SOMEONE_CALLING', body);
+          }
+         })
+
+         socket.on('CALL_ACCEPTED', body => {
+           console.log("get")
+          console.log(body)
+         const findSocket = onlineUsers.find(user => {
+           return user.userId == body.userid
+         })
+         if(findSocket){
+           io.to(findSocket.socketId).emit('USER_ACCEPTED_CALL', body);
+         }
+        })
+
+        socket.on('CALL_REJECTED', body => {
+        const findSocket = onlineUsers.find(user => {
+          return user.userId == body.id
+        })
+        if(findSocket){
+          io.to(findSocket.socketId).emit('CALL_REJECTED_MESSAGE', `${body.name} rejected your call`);
+        }
+       })
+        
+
           socket.on('disconnect', function(){
             onlineUsers.forEach((user,i)=>{
               if(user.socketId == socket.id){
